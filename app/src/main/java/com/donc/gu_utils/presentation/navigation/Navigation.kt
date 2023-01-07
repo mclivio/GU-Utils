@@ -15,6 +15,8 @@ fun Navigation(navController: NavHostController) {
         composable("card_search"){
             CardSearchScreen()
         }
+//        composable("card_details/{card_id}"){
+//        }
         composable("weekend"){
             WeekendScreen()
         }

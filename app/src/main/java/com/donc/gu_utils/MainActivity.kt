@@ -20,7 +20,9 @@ import com.donc.gu_utils.presentation.navigation.BottomBarItem
 import com.donc.gu_utils.presentation.navigation.BottomBarScreen
 import com.donc.gu_utils.presentation.navigation.Navigation
 import com.donc.gu_utils.ui.theme.GUUtilsTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {

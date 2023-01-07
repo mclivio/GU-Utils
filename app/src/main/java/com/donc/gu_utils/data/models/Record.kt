@@ -1,4 +1,4 @@
-package com.donc.gu_utils.data.responses
+package com.donc.gu_utils.data.models
 
 data class Record(
     val art_id: String,

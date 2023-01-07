@@ -1,4 +1,4 @@
-package com.donc.gu_utils.data.responses
+package com.donc.gu_utils.data.models
 
 data class CardRecords(
     val page: Int,

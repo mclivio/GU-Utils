@@ -1,6 +1,6 @@
 package com.donc.gu_utils.repository.cardsearch
 
-import com.donc.gu_utils.data.responses.CardRecords
+import com.donc.gu_utils.data.models.CardRecords
 import com.donc.gu_utils.util.Resource
 
 interface CardRepository {
@@ -15,6 +15,6 @@ As an alternative, the ViewModel will have an Interface on the constructor, if u
 activities the ViewModel will have an implemented version received from the AppModule and when
 used on a test they will use a fake version that doesn't have that chain of dependencies.
  */
-    suspend fun getAllCards() : Resource<CardRecords>
+    suspend fun getAllCards(page: Int) : Resource<CardRecords>
 }
 

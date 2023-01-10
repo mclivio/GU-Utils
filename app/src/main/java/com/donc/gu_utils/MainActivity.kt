@@ -4,21 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.donc.gu_utils.presentation.navigation.BottomBarItem
-import com.donc.gu_utils.presentation.navigation.BottomBarScreen
-import com.donc.gu_utils.presentation.navigation.Navigation
+import com.donc.gu_utils.ui.BottomBarItem
+import com.donc.gu_utils.ui.BottomBarScreen
+import com.donc.gu_utils.ui.Navigation
 import com.donc.gu_utils.ui.theme.GUUtilsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,7 +30,8 @@ class MainActivity : ComponentActivity() {
             GUUtilsTheme {
                 val navController = rememberNavController()
                 val uriHandler = LocalUriHandler.current
-                var titleDestination by remember {mutableStateOf("")}
+                var titleDestination by remember {mutableStateOf("Cards")}
+
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -42,18 +42,19 @@ class MainActivity : ComponentActivity() {
                                 IconButton(onClick = { uriHandler.openUri("https://github.com/mclivio/GU-Utils") }) {
                                     Icon(
                                         painter = painterResource(R.drawable.icons8_github_24),
-                                        contentDescription = getString(R.string.github_description),
+                                        contentDescription = stringResource(R.string.description_github),
                                         tint = MaterialTheme.colorScheme.primary
                                     )
                                 }
-                            }
+                            },
+                            colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
                         )
                     },
                     bottomBar = {
                         BottomBarScreen(
                             items = listOf(
                                 BottomBarItem(
-                                    route = "card_search",
+                                    route = "cards",
                                     title = "Cards",
                                     icon = R.drawable.icons8_search_in_list_24
                                     //Search in List icon by Icons8
@@ -84,8 +85,16 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                     }
-                ){
-                    Navigation(navController = navController)
+                ){ innerPadding ->
+                    Box(modifier = Modifier.padding(PaddingValues(
+                        0.dp,
+                        innerPadding.calculateTopPadding(),
+                        0.dp,
+                        innerPadding.calculateBottomPadding()))) {
+                        Navigation(navController = navController)
+                    }
+                    //This box with an inner padding calculated from the Scaffold serves as a way
+                    //to prevent the Top and Bottom bars from overlapping the design of the screens
                 }
             }
         }

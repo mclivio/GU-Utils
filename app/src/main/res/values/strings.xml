@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">GU-Utils</string>
-    <string name="github_description">Github</string>
+    <string name="button_retry">Retry</string>
+    <string name="description_add">Add a Card</string>
+    <string name="description_remove">Remove a Card</string>
+    <string name="description_github">Github</string>
+    <string name="description_card">Card Image of </string>
+    <string name="clickable_clearfilter">Clear Filters</string>
 </resources>

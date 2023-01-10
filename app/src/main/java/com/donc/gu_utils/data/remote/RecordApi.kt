@@ -7,7 +7,7 @@ import retrofit2.http.Query
 interface RecordApi {
     //Clase Usada por Retrofit para acceder a las rutas de la API
 
-    @GET("")
+    @GET("proto")
     suspend fun getCardRecords(
         @Query("page") page: Int,
         @Query("perPage") perPage: Int

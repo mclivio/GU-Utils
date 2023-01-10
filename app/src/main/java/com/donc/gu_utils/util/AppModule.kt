@@ -1,6 +1,7 @@
 package com.donc.gu_utils.util
 
 import com.donc.gu_utils.data.remote.RecordApi
+import com.donc.gu_utils.repository.cardsearch.CardRepository
 import com.donc.gu_utils.repository.cardsearch.DefaultCardRepository
 import com.donc.gu_utils.util.Constants.BASE_PROTO_URL
 import com.google.gson.GsonBuilder
@@ -15,9 +16,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    /* Here it's defined how to bring instances of certain types for Hilt to do injections
+Being installed in a singleton these dependencies will be available anywhere in the app. */
     @Singleton
     @Provides
-    fun provideCardRepository(apiService: RecordApi) = DefaultCardRepository(apiService)
+    fun provideCardRepository(apiService: RecordApi) = DefaultCardRepository(apiService) as CardRepository
 
     @Singleton
     @Provides
@@ -27,13 +30,4 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build().create(RecordApi::class.java)
     }
-
-//    @Singleton
-//    @Provides
-//    fun providePicsApiService() : PicsApi{
-//        return Retrofit.Builder()
-//            .baseUrl(BASE_PIC_URL)
-//            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-//            .build().create(PicsApi::class.java)
-//    }
 }

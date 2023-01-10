@@ -1,4 +1,4 @@
-package com.donc.gu_utils.presentation.navigation
+package com.donc.gu_utils.ui
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

@@ -15,6 +15,7 @@ As an alternative, the ViewModel will have an Interface on the constructor, if u
 activities the ViewModel will have an implemented version received from the AppModule and when
 used on a test they will use a fake version that doesn't have that chain of dependencies.
  */
-    suspend fun getAllCards(page: Int) : Resource<CardRecords>
+
+    suspend fun getFilteredCards(page: Int, god: String, mana: String, rarity: String, tribe: String) : Resource<CardRecords>
 }
 

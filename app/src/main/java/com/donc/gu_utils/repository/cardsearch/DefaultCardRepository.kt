@@ -1,5 +1,6 @@
 package com.donc.gu_utils.repository.cardsearch
 
+import android.util.Log
 import com.donc.gu_utils.data.models.CardRecords
 import com.donc.gu_utils.data.remote.RecordApi
 import com.donc.gu_utils.util.Constants.PER_PAGE
@@ -10,12 +11,22 @@ import javax.inject.Inject
 @ActivityScoped
 class DefaultCardRepository @Inject constructor(private val apiService: RecordApi) :
     CardRepository{
-    override suspend fun getAllCards(page: Int): Resource<CardRecords> {
+    override suspend fun getFilteredCards(
+        page: Int,
+        god: String,
+        mana: String,
+        rarity: String,
+        tribe: String
+    ): Resource<CardRecords> {
+        var manaFilter = if(mana.isEmpty()) null else mana.toInt()
         val response = try {
-            apiService.getCardRecords(page, PER_PAGE)
-        } catch(e: Exception) {
+            apiService.getFilteredRecords(page, PER_PAGE, god, manaFilter, rarity, tribe)
+        } catch (e:Exception) {
+            Log.d("exc", e.toString())
+            Log.d("exc2", e.message.toString())
             return Resource.Error("Ha ocurrido un error inesperado. Intente nuevamente.")
         }
+        Log.d("resp", response.toString())
         return Resource.Success(response)
     }
 }

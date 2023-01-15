@@ -1,5 +1,7 @@
 package com.donc.gu_utils.ui
 
+import android.os.Handler
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -36,8 +38,7 @@ import com.donc.gu_utils.util.Constants.BASE_PIC_URL
 
 @Composable
 fun CardSearchScreen(
-    navController: NavController,
-    viewModel: CardSearchViewModel = hiltViewModel()
+    navController: NavController
 ) {
     Surface(
         color = MaterialTheme.colorScheme.background,
@@ -52,7 +53,7 @@ fun CardSearchScreen(
 }
 
 @Composable
-fun SearchSection(){
+fun SearchSection(viewModel: CardSearchViewModel = hiltViewModel()){
     val filterList = listOf(
         ChipWithList(
             name = "God",
@@ -75,7 +76,6 @@ fun SearchSection(){
             selected = false
         ),
     )
-
     var selectedChips = remember {mutableStateListOf<ChipWithList>()}
     Column{
         Row(
@@ -125,10 +125,14 @@ fun SearchSection(){
                                     if (!selectedChips.contains(chip)) selectedChips.add(chip)
                                     selected = true
                                     filterName = item
+                                    viewModel.updateFilters(chip.name, item)
+                                    viewModel.clearCardRecords()
+                                    viewModel.loadCardsPaginated()
                                     //If an item is selected, it will also change showSubList to false, closing the menu
-                                    //It will also set a new filterName's value and isSelected to true changing both the label
+                                    //In addition, it sets a new filterName's value and isSelected to true changing both the label
                                     //and the color of the FilterChip as well as adding it to the list of selectedChips if it
-                                    //isn't there
+                                    //isn't there. Since this will mean that a filter has been selected, it will be updated in the
+                                    //viewModel and a search with the selected filters will be triggered.
                                 }
                             )
                         }
@@ -153,7 +157,9 @@ fun SearchSection(){
                         selectedChips.clear()
                         //Clearing the list, since the values are being remembered and observed,
                         //it will trigger a recomposition with the updated list which is empty.
-                        //TODO: Filtered Search
+                        viewModel.clearFilters()
+                        viewModel.clearCardRecords()
+                        viewModel.loadCardsPaginated()
                     }
                 )
             )
@@ -170,7 +176,20 @@ fun CardList(
     val endReached by remember {viewModel.endReached}
     val isLoading by remember {viewModel.isLoading}
     val loadError by remember {viewModel.loadError}
-    val isSearching by remember {viewModel.isSearching}
+    val cardsAmount by remember {viewModel.cardsAmount}
+
+    var toast = Toast.makeText(LocalContext.current, "$cardsAmount "+ stringResource(R.string.toast_cardsfound), Toast.LENGTH_SHORT)
+    LaunchedEffect(cardsAmount) {
+        toast.show()
+        val handler : Handler = Handler()
+        handler.postDelayed({ toast.cancel() }, 500)
+        //On each recomposition the toast will show and after half a second it will disappear.
+        //While usually one would just use Toast.LENGTH_SHORT, it has a duration of 2000ms or 2 seconds;
+        //this means that if one were to select all 4 filters very fast then 4 Toasts would show up
+        //and last for a total of 8 seconds on the screen which is A LOT. Since it is just used to show
+        //the number of cards found reducing the duration by cancelling them after 500ms seems good.
+    }
+
 
     LazyColumn(contentPadding = PaddingValues(12.dp, 0.dp)){
         val itemCount = if (cardList.size % 2 == 0) {
@@ -179,7 +198,7 @@ fun CardList(
             cardList.size / 2 +1
         }
         items(itemCount) {
-            if (it >= itemCount -1 && !endReached && !isLoading && !isSearching){
+            if (it >= itemCount -1 && !endReached && !isLoading){
                 viewModel.loadCardsPaginated()
                 //The reason isLoading is there is because these are async, which means the user could
                 //scroll down while loading is still in progress, the current page wouldn't be already

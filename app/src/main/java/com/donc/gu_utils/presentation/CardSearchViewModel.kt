@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.donc.gu_utils.data.models.ChipWithList
+import com.donc.gu_utils.data.models.Deck
 import com.donc.gu_utils.data.models.Record
 import com.donc.gu_utils.repository.cardsearch.CardRepository
 import com.donc.gu_utils.util.Constants.PER_PAGE
@@ -28,6 +29,7 @@ class CardSearchViewModel @Inject constructor(
     var rarity = mutableStateOf("")
     var tribe = mutableStateOf("")
     var cardsAmount = mutableStateOf(0)
+    var deck : Deck = Deck("nature")
 
     init {
         loadCardsPaginated()
@@ -101,5 +103,14 @@ class CardSearchViewModel @Inject constructor(
         rarity.value = ""
         mana.value = ""
         tribe.value = ""
+    }
+
+    fun newDeck(god:String){
+        deck = Deck(god)
+    }
+
+    fun cardCount(lib_id: String): Int{
+        return if (deck.libraryIds.contains(lib_id)) deck.libraryIds.count{it == lib_id}
+        else 0
     }
 }

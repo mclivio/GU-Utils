@@ -264,7 +264,8 @@ fun CardRow(
 fun CardEntry (
     entry: Record,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CardSearchViewModel = hiltViewModel()
 ) {
     Card(
         modifier = modifier
@@ -309,10 +310,9 @@ fun CardEntry (
                         .fillMaxWidth()
                         .padding(0.dp, 0.dp, 0.dp, 2.dp)
                 ) {
-                    //TODO Deck Building controls
-                    var quantity by remember {mutableStateOf(0)}
+                    var quantity by remember {mutableStateOf(viewModel.cardCount(entry.lib_id))}
                     FilledIconButton(
-                        onClick = { quantity-- },
+                        onClick = { quantity -= viewModel.deck.removeCard(entry.lib_id) },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
@@ -329,7 +329,7 @@ fun CardEntry (
                                 .align(CenterVertically)
                         )
                     FilledIconButton(
-                        onClick = { quantity++ },
+                        onClick = { quantity += viewModel.deck.addCard(entry.lib_id, entry.rarity, entry.god) },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(

@@ -12,12 +12,14 @@ class Deck(val god: String){
     }
 
     fun addCard(libId: String, rarity: String, cardGod: String) : Int{
-        return if (cardGod == god){
+        return if (cardGod == god || cardGod == "neutral"){
             if (libraryIds.count{it == libId} < 2 && libraryIds.size < 30 && rarity != "legendary") {
                 libraryIds.add(libId)
+                DeckBuilder.saveDeck(this)
                 1
             } else if (libraryIds.count{it == libId} == 0 && libraryIds.size < 30 && rarity == "legendary") {
                 libraryIds.add(libId)
+                DeckBuilder.saveDeck(this)
                 1
             } else 0
         }
@@ -28,9 +30,10 @@ class Deck(val god: String){
     }
 
     fun removeCard(libId: String) : Int{
-        if (libraryIds.contains(libId)){
+        return if (libraryIds.contains(libId)){
             libraryIds.remove(libId)
-            return 1
-        } else return 0
+            DeckBuilder.saveDeck(this)
+            1
+        } else 0
     }
 }

@@ -1,16 +1,27 @@
 package com.donc.gu_utils.presentation
 
+import android.content.Context
+import android.content.SharedPreferences
+import androidx.compose.material3.Card
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.donc.gu_utils.R
+import com.donc.gu_utils.data.models.CardRecords
 import com.donc.gu_utils.data.models.ChipWithList
 import com.donc.gu_utils.data.models.Deck
 import com.donc.gu_utils.data.models.Record
 import com.donc.gu_utils.repository.cardsearch.CardRepository
+import com.donc.gu_utils.util.Constants
 import com.donc.gu_utils.util.Constants.PER_PAGE
+import com.donc.gu_utils.util.DeckBuilder
 import com.donc.gu_utils.util.Resource
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
+import hilt_aggregated_deps._dagger_hilt_android_internal_modules_ApplicationContextModule
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,9 +40,11 @@ class CardSearchViewModel @Inject constructor(
     var rarity = mutableStateOf("")
     var tribe = mutableStateOf("")
     var cardsAmount = mutableStateOf(0)
-    var deck : Deck = Deck("nature")
+    var deck: Deck = Deck("nature")
 
     init {
+        val storedDeck: Deck? = DeckBuilder.getDeck()
+        if (storedDeck != null) deck = storedDeck
         loadCardsPaginated()
     }
 
@@ -90,7 +103,7 @@ class CardSearchViewModel @Inject constructor(
     }
 
     fun updateFilters(filterName: String, value: String) {
-        when (filterName){
+        when (filterName) {
             "God" -> god.value = value
             "Rarity" -> rarity.value = value
             "Mana" -> mana.value = value
@@ -105,12 +118,21 @@ class CardSearchViewModel @Inject constructor(
         tribe.value = ""
     }
 
-    fun newDeck(god:String){
+    fun newDeck(god: String) {
         deck = Deck(god)
+        DeckBuilder.saveDeck(deck)
     }
 
-    fun cardCount(lib_id: String): Int{
-        return if (deck.libraryIds.contains(lib_id)) deck.libraryIds.count{it == lib_id}
+    fun cardCount(libId: String): Int {
+        return if (deck.libraryIds.contains(libId)) deck.libraryIds.count { it == libId }
         else 0
+    }
+
+    fun addCard(libId: String, rarity: String, god: String): Int {
+        return deck.addCard(libId, rarity, god)
+    }
+
+    fun removeCard(libId: String): Int {
+        return deck.removeCard(libId)
     }
 }

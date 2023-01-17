@@ -1,6 +1,12 @@
 package com.donc.gu_utils.util
 
+import android.content.Context
+import android.content.SharedPreferences
+import com.donc.gu_utils.GuUtilsApplication
+import com.donc.gu_utils.R
 import com.donc.gu_utils.data.models.Deck
+import com.google.gson.Gson
+
 
 object DeckBuilder {
 
@@ -98,23 +104,52 @@ object DeckBuilder {
         }
         return codedDeck
     }
+
+    fun getDeck(): Deck? {
+        val context = GuUtilsApplication.appContext
+        val prefs: SharedPreferences =
+            context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+        val deckString = prefs.getString("deck", null)
+        val gson: Gson = Gson()
+        return gson.fromJson(deckString, Deck::class.java)
+    }
+
+    fun saveDeck(deck: Deck){
+        val context = GuUtilsApplication.appContext
+        val prefs: SharedPreferences = context.getSharedPreferences(
+            context.getString(R.string.app_name),
+            Context.MODE_PRIVATE
+        )
+        val gson: Gson = Gson()
+        val deckString = gson.toJson(deck)
+        val editor = prefs.edit()
+        editor.putString("deck", deckString)
+        editor.apply()
+    }
 /*
     fun decodeDeck(codedDeck: String): Deck{
         var god : String = decodeGod(codedDeck[5].toString())
         var deck : Deck = Deck(god)
         val chunkedIds = codedDeck.substring(7).chunked(3)
         chunkedIds.forEach {
+            val libId = decodeLibraryId(it)
+            val set = getSetId(libId)
             deck.addCard(it)
             //A Deck needs a LibraryID and Rarity to add it to the list. However you cannot get
             //Rarity just from a LibraryID, you need to get a Proto from the API where lib_id=LibraryID
             //and get the Rarity from that Proto. However, the API doesn't let you get it / doesn't work.
             //If you try the endpoint https://api.godsunchained.com/v0/proto?lib_id=l8-018
-            //It shows 1542 result rather than just Finnian. Therefore it's same to assume that the
+            //It shows 1542 results rather than just Finnian. Therefore, it's safe to assume that the
             //endpoint doesn't work or hasn't been implemented yet. Until then, this function cannot be used.
+            //Possible solution: Get the list of cards of a Set, say L1. Check if any of those cards
+            //has a libraryId equal to the decoded libraryId. If it is, add that card to the deck. The problem
+            //with this approach is that we would need to check if up to 30 decoded libraryIds each
+            //exist in a set of 300+ cards which is equal to 30*300 comparisons (9000). Assuming the deck
+            //was made from cards of each of the 10 available sets we are talking about up to 90000 comparisons.
         }
         return deck
     }
- */
+    */
 }
 
 enum class Alphabet (val characters: String){

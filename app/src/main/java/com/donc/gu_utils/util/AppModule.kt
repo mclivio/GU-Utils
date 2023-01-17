@@ -1,5 +1,6 @@
 package com.donc.gu_utils.util
 
+import android.content.Context
 import com.donc.gu_utils.data.remote.RecordApi
 import com.donc.gu_utils.repository.cardsearch.CardRepository
 import com.donc.gu_utils.repository.cardsearch.DefaultCardRepository
@@ -8,6 +9,7 @@ import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,5 +31,13 @@ Being installed in a singleton these dependencies will be available anywhere in 
             .baseUrl(BASE_PROTO_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build().create(RecordApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideContext(
+        @ApplicationContext context: Context,
+    ): Context {
+        return context
     }
 }

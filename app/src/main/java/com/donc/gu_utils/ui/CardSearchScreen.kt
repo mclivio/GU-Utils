@@ -57,7 +57,7 @@ fun SearchSection(viewModel: CardSearchViewModel = hiltViewModel()){
     val filterList = listOf(
         ChipWithList(
             name = "God",
-            subList = listOf("light", "death", "nature", "war", "magic", "deception"),
+            subList = listOf("neutral", "light", "death", "nature", "war", "magic", "deception"),
             selected = false
         ),
         ChipWithList(
@@ -72,7 +72,8 @@ fun SearchSection(viewModel: CardSearchViewModel = hiltViewModel()){
         ),
         ChipWithList(
             name = "Tribe",
-            subList = listOf("nether", "aether", "atlantean", "viking", "olympian", "anubian", "amazon"),
+            subList = listOf("aether", "amazon", "anubian", "atlantean", "dragon", "guild", "mystic",
+                "nether", "olympian", "structure", "viking", "wild"),
             selected = false
         ),
     )
@@ -312,7 +313,7 @@ fun CardEntry (
                 ) {
                     var quantity by remember {mutableStateOf(viewModel.cardCount(entry.lib_id))}
                     FilledIconButton(
-                        onClick = { quantity -= viewModel.deck.removeCard(entry.lib_id) },
+                        onClick = { quantity -= viewModel.removeCard(entry.lib_id) },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
@@ -329,7 +330,7 @@ fun CardEntry (
                                 .align(CenterVertically)
                         )
                     FilledIconButton(
-                        onClick = { quantity += viewModel.deck.addCard(entry.lib_id, entry.rarity, entry.god) },
+                        onClick = { quantity += viewModel.addCard(entry.lib_id, entry.rarity, entry.god) },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(

@@ -16,4 +16,9 @@ interface RecordApi {
         @Query("rarity") rarity: String,
         @Query("tribe") tribe: String
     ) : CardRecords
+
+    @GET("proto")
+    suspend fun getSetRecords(
+        @Query("set") set: String
+    ) : CardRecords
 }

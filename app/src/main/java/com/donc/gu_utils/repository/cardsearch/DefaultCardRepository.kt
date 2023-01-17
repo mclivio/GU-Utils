@@ -22,11 +22,8 @@ class DefaultCardRepository @Inject constructor(private val apiService: RecordAp
         val response = try {
             apiService.getFilteredRecords(page, PER_PAGE, god, manaFilter, rarity, tribe)
         } catch (e:Exception) {
-            Log.d("exc", e.toString())
-            Log.d("exc2", e.message.toString())
             return Resource.Error("Ha ocurrido un error inesperado. Intente nuevamente.")
         }
-        Log.d("resp", response.toString())
         return Resource.Success(response)
     }
 }

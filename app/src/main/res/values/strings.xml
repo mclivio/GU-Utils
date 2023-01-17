@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">GU-Utils</string>
     <string name="button_retry">Retry</string>
+    <string name="button_back">Volver</string>
     <string name="description_add">Add a Card</string>
     <string name="description_remove">Remove a Card</string>
     <string name="description_github">Github</string>

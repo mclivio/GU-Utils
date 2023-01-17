@@ -270,7 +270,7 @@ fun CardEntry (
 ) {
     Card(
         modifier = modifier
-            .clickable { navController.navigate(route = "card_details/${entry.id}") }
+            .clickable { navController.navigate(route = "details/${entry.id}") }
             .border(
                 width = 1.dp,
                 color = MaterialTheme.colorScheme.primary,

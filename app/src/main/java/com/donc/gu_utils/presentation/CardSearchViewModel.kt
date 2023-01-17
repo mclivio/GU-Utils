@@ -128,11 +128,11 @@ class CardSearchViewModel @Inject constructor(
         else 0
     }
 
-    fun addCard(libId: String, rarity: String, god: String): Int {
-        return deck.addCard(libId, rarity, god)
+    fun addCard(entry: Record): Int {
+        return deck.addCard(entry)
     }
 
-    fun removeCard(libId: String): Int {
-        return deck.removeCard(libId)
+    fun removeCard(entry: Record): Int {
+        return deck.removeCard(entry)
     }
 }

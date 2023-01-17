@@ -313,7 +313,7 @@ fun CardEntry (
                 ) {
                     var quantity by remember {mutableStateOf(viewModel.cardCount(entry.lib_id))}
                     FilledIconButton(
-                        onClick = { quantity -= viewModel.removeCard(entry.lib_id) },
+                        onClick = { quantity -= viewModel.removeCard(entry) },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
@@ -330,7 +330,7 @@ fun CardEntry (
                                 .align(CenterVertically)
                         )
                     FilledIconButton(
-                        onClick = { quantity += viewModel.addCard(entry.lib_id, entry.rarity, entry.god) },
+                        onClick = { quantity += viewModel.addCard(entry) },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(

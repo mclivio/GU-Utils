@@ -1,9 +1,11 @@
 package com.donc.gu_utils.data.models
 
+import androidx.compose.runtime.mutableStateOf
 import com.donc.gu_utils.util.DeckBuilder
 
 class Deck(val god: String){
     var libraryIds = mutableListOf<String>()
+    var cardList = mutableListOf<Record>()
     val formatCode = 1
     var domain: Int = 0
 
@@ -11,14 +13,16 @@ class Deck(val god: String){
         domain = DeckBuilder.encodeGod(god)
     }
 
-    fun addCard(libId: String, rarity: String, cardGod: String) : Int{
-        return if (cardGod == god || cardGod == "neutral"){
-            if (libraryIds.count{it == libId} < 2 && libraryIds.size < 30 && rarity != "legendary") {
-                libraryIds.add(libId)
+    fun addCard(entry:Record) : Int{
+        return if (entry.god == god || entry.god == "neutral"){
+            if (libraryIds.count{it == entry.lib_id} < 2 && libraryIds.size < 30 && entry.rarity != "legendary") {
+                cardList.add(entry)
+                libraryIds.add(entry.lib_id)
                 DeckBuilder.saveDeck(this)
                 1
-            } else if (libraryIds.count{it == libId} == 0 && libraryIds.size < 30 && rarity == "legendary") {
-                libraryIds.add(libId)
+            } else if (libraryIds.count{it == entry.lib_id} == 0 && libraryIds.size < 30 && entry.rarity == "legendary") {
+                cardList.add(entry)
+                libraryIds.add(entry.lib_id)
                 DeckBuilder.saveDeck(this)
                 1
             } else 0
@@ -29,9 +33,10 @@ class Deck(val god: String){
         else 0
     }
 
-    fun removeCard(libId: String) : Int{
-        return if (libraryIds.contains(libId)){
-            libraryIds.remove(libId)
+    fun removeCard(entry: Record) : Int{
+        return if (libraryIds.contains(entry.lib_id)){
+            cardList.remove(entry)
+            libraryIds.remove(entry.lib_id)
             DeckBuilder.saveDeck(this)
             1
         } else 0

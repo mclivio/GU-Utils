@@ -21,7 +21,6 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.donc.gu_utils.R
-import com.donc.gu_utils.data.models.Record
 import com.donc.gu_utils.util.Constants
 
 @Composable
@@ -41,7 +40,7 @@ fun CardDetailsScreen(
                 .crossfade(true)
                 .build(),
             contentDescription = stringResource(R.string.description_card) + "card ID: $proto_id",
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier
                 .background(color = MaterialTheme.colorScheme.surface)
         )

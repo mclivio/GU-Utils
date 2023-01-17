@@ -1,28 +1,15 @@
 package com.donc.gu_utils.presentation
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.compose.material3.Card
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.donc.gu_utils.R
-import com.donc.gu_utils.data.models.CardRecords
-import com.donc.gu_utils.data.models.ChipWithList
 import com.donc.gu_utils.data.models.Deck
 import com.donc.gu_utils.data.models.Record
 import com.donc.gu_utils.repository.cardsearch.CardRepository
-import com.donc.gu_utils.util.Constants
 import com.donc.gu_utils.util.Constants.PER_PAGE
 import com.donc.gu_utils.util.DeckBuilder
 import com.donc.gu_utils.util.Resource
-import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import hilt_aggregated_deps._dagger_hilt_android_internal_modules_ApplicationContextModule
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

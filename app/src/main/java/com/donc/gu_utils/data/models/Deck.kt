@@ -1,6 +1,5 @@
 package com.donc.gu_utils.data.models
 
-import androidx.compose.runtime.mutableStateOf
 import com.donc.gu_utils.util.DeckBuilder
 
 class Deck(val god: String){

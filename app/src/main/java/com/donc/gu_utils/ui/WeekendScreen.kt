@@ -1,4 +1,4 @@
-package com.donc.gu_utils.presentation.weekend
+package com.donc.gu_utils.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

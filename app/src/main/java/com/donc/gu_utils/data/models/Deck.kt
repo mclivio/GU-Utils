@@ -1,10 +1,11 @@
 package com.donc.gu_utils.data.models
 
+import androidx.compose.runtime.mutableStateListOf
 import com.donc.gu_utils.util.DeckBuilder
 
 class Deck(val god: String){
     var libraryIds = mutableListOf<String>()
-    var cardList = mutableListOf<Record>()
+    var cardList = mutableStateListOf<Record>()
     val formatCode = 1
     var domain: Int = 0
 

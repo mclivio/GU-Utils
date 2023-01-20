@@ -27,11 +27,10 @@ class CardSearchViewModel @Inject constructor(
     var rarity = mutableStateOf("")
     var tribe = mutableStateOf("")
     var cardsAmount = mutableStateOf(0)
-    var deck: Deck = Deck("nature")
-
+    var deck = mutableStateOf(Deck("nature"))
     init {
         val storedDeck: Deck? = DeckBuilder.getDeck()
-        if (storedDeck != null) deck = storedDeck
+        if (storedDeck != null) deck.value = storedDeck
         loadCardsPaginated()
     }
 
@@ -106,20 +105,20 @@ class CardSearchViewModel @Inject constructor(
     }
 
     fun newDeck(god: String) {
-        deck = Deck(god)
-        DeckBuilder.saveDeck(deck)
+        deck.value = Deck(god)
+        DeckBuilder.saveDeck(deck.value)
     }
 
     fun cardCount(libId: String): Int {
-        return if (deck.libraryIds.contains(libId)) deck.libraryIds.count { it == libId }
+        return if (deck.value.libraryIds.contains(libId)) deck.value.libraryIds.count { it == libId }
         else 0
     }
 
     fun addCard(entry: Record): Int {
-        return deck.addCard(entry)
+        return deck.value.addCard(entry)
     }
 
     fun removeCard(entry: Record): Int {
-        return deck.removeCard(entry)
+        return deck.value.removeCard(entry)
     }
 }

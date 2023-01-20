@@ -3,14 +3,16 @@ package com.donc.gu_utils.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,41 +20,45 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.donc.gu_utils.R
+import com.donc.gu_utils.data.models.Record
 import com.donc.gu_utils.presentation.CardSearchViewModel
 
 @Composable
 fun DeckScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: CardSearchViewModel = hiltViewModel()
 ) {
+    val cardList = viewModel.deck.value.cardList
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ){
         Column(modifier = Modifier.fillMaxSize()){
-            HeaderSection()
+            HeaderSection(onNewDeck = {viewModel.newDeck(it)})
             Spacer(modifier = Modifier.height(4.dp))
-            DeckSection(navController = navController)
+            DeckSection(navController = navController, deck = cardList, onDelete = {viewModel.deck.value.removeCard(it)})
         }
     }
 }
 
 @Composable
-fun HeaderSection(viewModel: CardSearchViewModel = hiltViewModel()){
+fun HeaderSection(onNewDeck: (String) -> Unit){
     val showDialog = remember {mutableStateOf(false)}
     GodDialog(
         showDialog = showDialog.value,
         dismissDialog = {showDialog.value = false},
         onConfirm = {
-            viewModel.newDeck(it)
+            onNewDeck(it)
         //When a god is selected in the radioGroup the value will be hoisted up to the Dialog,
-        //once the dialog "confirm button" is pressed, it will use the value of the selected god
-        //to call the newDeck function of the viewModel with that string as a parameter
+        //once the dialog "confirm button" is pressed, it will hoist it up again and use the value
+        //of the selected god to call the newDeck function of the viewModel with that string as a parameter
             showDialog.value = false
         }
     )
@@ -213,7 +219,46 @@ fun RadioGroup(
 
 @Composable
 fun DeckSection(
-    navController: NavController
+    navController: NavController,
+    deck: MutableList<Record>,
+    onDelete: (Record) -> Unit
 ){
+    LazyColumn(modifier = Modifier.fillMaxSize(1F)) {
+        items(deck.size){ item ->
+            CardRow(navController, deck[item], onDelete = {onDelete(it)})
+        }
+    }
+//    Column(modifier = Modifier.fillMaxSize(1F)){
+//        deck.cardList.forEach { item ->
+//            CardRow(navController, item, onDelete = {deck.removeCard(it)})
+//        }
+//    }
+}
 
+@Composable
+fun CardRow(
+    navController: NavController,
+    entry: Record,
+    onDelete: (Record) -> Unit
+){
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 4.dp)
+        .clickable { navController.navigate(route = "details/${entry.id}") },
+        horizontalArrangement = Arrangement.SpaceAround,
+        verticalAlignment = Alignment.CenterVertically
+        ){
+        Text(
+            text = entry.name,
+            fontWeight = FontWeight.Bold,
+            fontSize = 10.sp,
+            textAlign = TextAlign.Start
+        )
+        IconButton(onClick = { onDelete(entry) }) {
+            Icon(
+                Icons.Default.Delete,
+                contentDescription = stringResource(R.string.description_remove),
+            )
+        }
+    }
 }

@@ -1,9 +1,12 @@
 package com.donc.gu_utils.util
 
 import android.content.Context
+import com.donc.gu_utils.data.remote.HistoryApi
 import com.donc.gu_utils.data.remote.RecordApi
 import com.donc.gu_utils.repository.cardsearch.CardRepository
 import com.donc.gu_utils.repository.cardsearch.DefaultCardRepository
+import com.donc.gu_utils.repository.history.DefaultHistoryRepository
+import com.donc.gu_utils.repository.history.HistoryRepository
 import com.donc.gu_utils.util.Constants.BASE_PROTO_URL
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -23,6 +26,19 @@ Being installed in a singleton these dependencies will be available anywhere in 
     @Singleton
     @Provides
     fun provideCardRepository(apiService: RecordApi) = DefaultCardRepository(apiService) as CardRepository
+
+    @Singleton
+    @Provides
+    fun provideHistoryRepository(apiService: HistoryApi) = DefaultHistoryRepository(apiService) as HistoryRepository
+
+    @Singleton
+    @Provides
+    fun provideHistoryApiService() : HistoryApi{
+        return Retrofit.Builder()
+            .baseUrl(BASE_PROTO_URL)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build().create(HistoryApi::class.java)
+    }
 
     @Singleton
     @Provides

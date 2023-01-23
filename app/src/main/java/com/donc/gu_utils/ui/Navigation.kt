@@ -8,9 +8,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.donc.gu_utils.presentation.deck.DeckScreen
-import com.donc.gu_utils.presentation.history.HistoryScreen
-import com.donc.gu_utils.presentation.weekend.WeekendScreen
 
 @Composable
 fun Navigation(navController: NavHostController) {
@@ -40,7 +37,7 @@ fun Navigation(navController: NavHostController) {
             HistoryScreen()
         }
         composable("deck"){
-            DeckScreen()
+            DeckScreen(navController = navController)
         }
     }
 }

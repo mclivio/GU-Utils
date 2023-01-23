@@ -149,7 +149,7 @@ fun SearchSection(viewModel: CardSearchViewModel = hiltViewModel()){
         {
             Text(
                 text = stringResource(R.string.clickable_clearfilter),
-                fontSize = 8.sp,
+                fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.clickable(
@@ -162,7 +162,7 @@ fun SearchSection(viewModel: CardSearchViewModel = hiltViewModel()){
                         viewModel.clearCardRecords()
                         viewModel.loadCardsPaginated()
                     }
-                )
+                ).padding(2.dp, 2.dp)
             )
         }
     }

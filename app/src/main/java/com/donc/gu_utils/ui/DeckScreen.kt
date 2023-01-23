@@ -228,11 +228,6 @@ fun DeckSection(
             CardRow(navController, deck[item], onDelete = {onDelete(it)})
         }
     }
-//    Column(modifier = Modifier.fillMaxSize(1F)){
-//        deck.cardList.forEach { item ->
-//            CardRow(navController, item, onDelete = {deck.removeCard(it)})
-//        }
-//    }
 }
 
 @Composable
@@ -243,15 +238,15 @@ fun CardRow(
 ){
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 4.dp)
+        .padding(horizontal = 16.dp)
         .clickable { navController.navigate(route = "details/${entry.id}") },
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
         ){
         Text(
             text = entry.name,
             fontWeight = FontWeight.Bold,
-            fontSize = 10.sp,
+            fontSize = 12.sp,
             textAlign = TextAlign.Start
         )
         IconButton(onClick = { onDelete(entry) }) {

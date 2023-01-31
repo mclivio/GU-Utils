@@ -10,17 +10,17 @@ import javax.inject.Inject
 @ActivityScoped
 class DefaultHistoryRepository @Inject constructor(private val apiService: HistoryApi) :
     HistoryRepository {
-    override suspend fun getWinningMatches(player_won: String): Resource<MatchRecords> {
+    override suspend fun getWinningMatches(player_won: String, page: Int): Resource<MatchRecords> {
         val response = try {
-            apiService.getWinningRecords(player_won, Constants.PER_PAGE)
+            apiService.getWinningRecords(player_won, page, Constants.PER_PAGE_MAX)
         } catch (e:Exception) {
             return Resource.Error("Ha ocurrido un error inesperado. Intente nuevamente.")
         }
         return Resource.Success(response)
     }
-    override suspend fun getLosingMatches(player_lost: String): Resource<MatchRecords> {
+    override suspend fun getLosingMatches(player_lost: String, page: Int): Resource<MatchRecords> {
         val response = try {
-            apiService.getLosingRecords(player_lost, Constants.PER_PAGE)
+            apiService.getLosingRecords(player_lost, page, Constants.PER_PAGE_MAX)
         } catch (e:Exception) {
             return Resource.Error("Ha ocurrido un error inesperado. Intente nuevamente.")
         }

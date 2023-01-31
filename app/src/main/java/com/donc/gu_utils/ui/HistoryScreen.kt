@@ -1,17 +1,21 @@
 package com.donc.gu_utils.ui
 
+import androidx.compose.runtime.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -19,12 +23,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donc.gu_utils.R
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.donc.gu_utils.data.models.RecordMatch
 import com.donc.gu_utils.presentation.HistoryViewModel
 
 @Composable
 fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
+    val matchList = viewModel.matchRecords.sortedByDescending { it.end_time }
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
@@ -34,7 +40,7 @@ fun HistoryScreen(
                 viewModel.loadLatestMatches(it)
             }
             Spacer(modifier = Modifier.height(4.dp))
-            MatchList()
+            MatchList(matchList)
         }
     }
 }
@@ -97,6 +103,84 @@ fun SearchSection(
 }
 
 @Composable
-fun MatchList(){
+fun MatchList(
+    history: List<RecordMatch>
+) {
+    val columnsPlayersWeight = .4f
+    val columnTurnsWeight = .2f
+    LazyColumn(modifier = Modifier.fillMaxSize(1F)) {
+        // These are the "Header" cells
+        item {
+            Row(
+                Modifier
+                    .background(MaterialTheme.colorScheme.surface)
+                    .padding(horizontal = 6.dp)
+            ) {
+                Cell(text = "Winner", weight = columnsPlayersWeight, withPic = false, "")
+                Cell(text = "Loser", weight = columnsPlayersWeight, withPic = false, "")
+                Cell(text = "Turns", weight = columnTurnsWeight, withPic = false, "")
+            }
+        }
+        // These are the actual values
+        items(history.size) { item ->
+            Row(
+                Modifier
+                    .padding(horizontal = 6.dp)
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+            ) {
+                Cell(
+                    text = history[item].player_info[0].user_id.toString(),
+                    weight = columnsPlayersWeight,
+                    withPic = true,
+                    history[item].player_info[0].god
+                )
+                Cell(
+                    text = history[item].player_info[1].user_id.toString(),
+                    weight = columnsPlayersWeight,
+                    withPic = true,
+                    history[item].player_info[1].god
+                )
+                Cell(
+                    text = history[item].total_turns.toString(),
+                    weight = columnTurnsWeight,
+                    withPic = false,
+                    ""
+                )
+            }
+        }
+    }
+}
 
+@Composable
+fun RowScope.Cell(
+    text: String,
+    weight: Float,
+    withPic: Boolean,
+    selectedGod: String,
+) {
+    Row(
+        Modifier
+            .border(1.dp, MaterialTheme.colorScheme.outline)
+            .weight(weight)
+            .padding(6.dp)){
+        if (withPic){
+            Image(
+                painter = painterResource(id = godRoute(selectedGod)),
+                contentDescription = stringResource(id = R.string.description_god),
+                modifier = Modifier
+                    .size(25.dp)
+                    .clip(CircleShape)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = CircleShape
+                    )
+                    .align(Alignment.CenterVertically)
+            )
+            //If its a cell which should have a Pic, it would receive a "God" used by the player
+            //and according to the selectedGod it chooses a route to the corresponding pic
+        }
+        Text(text = text, modifier = Modifier.padding(6.dp))
+    }
 }

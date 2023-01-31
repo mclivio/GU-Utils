@@ -16,8 +16,9 @@ activities the ViewModel will have an implemented version received from the AppM
 used on a test they will use a fake version that doesn't have that chain of dependencies.
  */
 
-    suspend fun getWinningMatches(player_won : String) : Resource<MatchRecords>
+    suspend fun getWinningMatches(player_won : String, page: Int) : Resource<MatchRecords>
 
-    suspend fun getLosingMatches(player_lost : String) : Resource<MatchRecords>
+    suspend fun getLosingMatches(player_lost : String, page: Int) : Resource<MatchRecords>
+
 }
 

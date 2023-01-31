@@ -10,12 +10,14 @@ interface HistoryApi {
     @GET("match")
     suspend fun getWinningRecords(
         @Query("player_won") player_won: String,
+        @Query("page") page: Int,
         @Query("perPage") perPage: Int
     ) : MatchRecords
 
     @GET("match")
     suspend fun getLosingRecords(
         @Query("player_lost") player_lost: String,
+        @Query("page") page: Int,
         @Query("perPage") perPage: Int
     ) : MatchRecords
 }

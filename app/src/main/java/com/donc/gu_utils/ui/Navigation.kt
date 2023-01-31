@@ -30,8 +30,8 @@ fun Navigation(navController: NavHostController) {
                 )
             }
         }
-        composable("weekend"){
-            WeekendScreen()
+        composable("profile"){
+            ProfileScreen()
         }
         composable("history"){
             HistoryScreen()

@@ -2,7 +2,6 @@ package com.donc.gu_utils.repository.profile
 
 import com.donc.gu_utils.data.models.PlayerRecords
 import com.donc.gu_utils.data.remote.ProfileApi
-import com.donc.gu_utils.util.Constants
 import com.donc.gu_utils.util.Resource
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject

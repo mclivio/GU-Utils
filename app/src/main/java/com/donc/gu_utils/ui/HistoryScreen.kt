@@ -1,5 +1,6 @@
 package com.donc.gu_utils.ui
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -19,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.donc.gu_utils.R
@@ -31,15 +35,18 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = hiltViewModel()
 ) {
     val matchList = viewModel.matchRecords.sortedByDescending { it.end_time }
+    val isLoading = viewModel.isLoading
+    val loadError = viewModel.loadError
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ){
         Column(modifier = Modifier.fillMaxSize()){
-            SearchSection{
+            SearchSection {
                 viewModel.loadLatestMatches(it)
             }
             Spacer(modifier = Modifier.height(4.dp))
+            LoadingSection(isLoading.value, loadError.value)
             MatchList(matchList)
         }
     }
@@ -47,7 +54,7 @@ fun HistoryScreen(
 
 @Composable
 fun SearchSection(
-    onSearch: (String) -> Unit
+    onSearch: (String) -> Unit,
 ){
     val text = remember {mutableStateOf("")}
     Box(
@@ -64,6 +71,7 @@ fun SearchSection(
                 color = MaterialTheme.colorScheme.onSurface,
                 fontSize = 14.sp
             ),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             decorationBox = { innerTextField ->
                 /* Added only because BasicTextField doesn't have an Icon and the classic TextField
                  has a default design that doesn't seem good for a search bar */
@@ -182,5 +190,32 @@ fun RowScope.Cell(
             //and according to the selectedGod it chooses a route to the corresponding pic
         }
         Text(text = text, modifier = Modifier.padding(6.dp))
+    }
+}
+
+@Composable
+fun LoadingSection(
+    isLoading: Boolean,
+    loadError: String
+) {
+    var visible by remember { mutableStateOf(true) }
+    AnimatedVisibility(visible = visible ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize(),
+        ) {
+            if (isLoading) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            } else if (loadError.isNotEmpty()) {
+                Text(
+                    text = loadError,
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center
+                )
+            } else visible = false
+            //If it is still loading it will show it, otherwise if it finished loading and there was
+            //an error it will show the error instead
+        }
     }
 }

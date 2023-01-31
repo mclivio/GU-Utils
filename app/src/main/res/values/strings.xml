@@ -3,11 +3,13 @@
     <string name="button_retry">Retry</string>
     <string name="button_back">Volver</string>
     <string name="button_newdeck">New Deck</string>
+    <string name="hint_searchbyid">Search by User ID</string>
     <string name="description_add">Add a Card</string>
     <string name="description_remove">Remove a Card</string>
     <string name="description_github">Github</string>
     <string name="description_god">Circular Image of Selected God</string>
     <string name="description_card">Card Image of </string>
+    <string name="description_search">Search Icon </string>
     <string name="clickable_clearfilter">Clear Filters</string>
     <string name="toast_cardsfound"> cards were found.</string>
     <string name="deck_header"> Deck Editor </string>

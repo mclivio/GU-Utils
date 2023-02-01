@@ -1,5 +1,6 @@
 package com.donc.gu_utils.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,8 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,27 +33,42 @@ import androidx.navigation.NavController
 import com.donc.gu_utils.R
 import com.donc.gu_utils.data.models.Record
 import com.donc.gu_utils.presentation.CardSearchViewModel
+import com.donc.gu_utils.util.DeckBuilder
 
 @Composable
 fun DeckScreen(
     navController: NavController,
     viewModel: CardSearchViewModel = hiltViewModel()
 ) {
-    val cardList = viewModel.deck.value.cardList
+    val cardList = viewModel.deck.value.cardList.sortedByDescending { it.name }
+    val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
     ){
         Column(modifier = Modifier.fillMaxSize()){
-            HeaderSection(onNewDeck = {viewModel.newDeck(it)})
+            HeaderSection(
+                onNewDeck = {viewModel.newDeck(it)},
+                onEncode = {
+                    val deckString = DeckBuilder.getDeck()
+                        ?.let { it1 -> DeckBuilder.encodeDeck(it1) } ?: ""
+                    if (deckString.isBlank()) {
+                        Toast.makeText(context, context.resources.getString(R.string.button_encodefails), Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, context.resources.getString(R.string.button_encodesuccess), Toast.LENGTH_SHORT).show()
+                        clipboardManager.setText(AnnotatedString((deckString)))
+                    }
+                }
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            DeckSection(navController = navController, deck = cardList, onDelete = {viewModel.deck.value.removeCard(it)})
+            DeckSection(navController = navController, deck = cardList as MutableList<Record>, onDelete = {viewModel.deck.value.removeCard(it)})
         }
     }
 }
 
 @Composable
-fun HeaderSection(onNewDeck: (String) -> Unit){
+fun HeaderSection(onNewDeck: (String) -> Unit, onEncode: () -> Unit){
     val showDialog = remember {mutableStateOf(false)}
     GodDialog(
         showDialog = showDialog.value,
@@ -69,11 +88,23 @@ fun HeaderSection(onNewDeck: (String) -> Unit){
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = stringResource(R.string.deck_header),
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp
-        )
+        Row {
+            Text(
+                text = stringResource(R.string.deck_header),
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(end = 10.dp)
+            )
+            IconButton(
+                onClick = { onEncode() },
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_baseline_content_copy_24),
+                    contentDescription = stringResource(id = R.string.description_copy)
+                )
+            }
+        }
         Button(onClick = {
             showDialog.value = true
         }) {

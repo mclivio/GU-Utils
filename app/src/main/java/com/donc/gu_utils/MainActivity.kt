@@ -60,8 +60,8 @@ class MainActivity : ComponentActivity() {
                                     //Search in List icon by Icons8
                                 ),
                                 BottomBarItem(
-                                    route = "weekend",
-                                    title = "Weekend",
+                                    route = "profile",
+                                    title = "Profile",
                                     icon = R.drawable.icons8_graph_24
                                     //Graph icon by Icons8
                                 ),

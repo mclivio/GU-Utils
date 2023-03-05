@@ -40,14 +40,14 @@ However, the way it is coded makes it hard to do:
 
 Taking Finnian as an example, his library_id is L8-018. When you put the card into your deck, the game follows this process:
 A library_id gets coded into 3 letters:
-$${\color{orange}LY-XXX → A B C}$$
-$${\color{orange}A = Y}$$
-$${\color{orange}B = XXX / 52}$$
-$${\color{orange}C = XXX \\% 52}$$
+$$LY-XXX → A B C$$
+$$A = Y$$
+$$B = XXX / 52$$
+$$C = XXX \\% 52$$
 Since 26 is the length of the American alphabet, this 52 is the length if we take both uppercase and lowercase letters into consideration.
 The result of each operation is the index of the character in a 52 letters alphabet.
-$${\color{orange}L8-018 → [A = 8], [B = 018 / 52 = 0], [C = 18 \\% 52 = 18]}$$
-$${\color{orange}8 0 18 → I A S}$$
+$$L8-018 → [A = 8], [B = 018 / 52 = 0], [C = 18 \\% 52 = 18]$$
+$$8 0 18 → I A S$$
 Thus "L8-018" becomes "IAS".
 This way for each card in your deck you can encode their library_id. But once you encode it, even if you decode the string back to a library_id, there is no endpoint in the API to get a card by library_id.
 
